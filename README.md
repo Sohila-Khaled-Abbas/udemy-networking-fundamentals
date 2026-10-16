@@ -17,7 +17,8 @@ This repository is based on the original project by [André Brandão](https://gi
 
 The original course examples are retained. These are the additional exercises in this version:
 
-- **C UDP server — `udpserver-c/main.c`:** a minimal UDP socket example using POSIX sockets. It binds to `127.0.0.1:5501` and receives a datagram, providing a C implementation to compare with the Go and Node.js labs. The source references [UDP Client-Server Program in C](https://github.com/nikhilroxtomar/UDP-Client-Server-Program-in-C).
+- **C UDP server — `udpserver-c/main.c`:** a minimal UDP socket example using POSIX sockets for Linux, macOS, or WSL. It binds to `127.0.0.1:5501` and receives one datagram. The source references [UDP Client-Server Program in C](https://github.com/nikhilroxtomar/UDP-Client-Server-Program-in-C).
+- **Native Windows C UDP server — `udpserver-c/main-windows.c`:** a Windows-compatible version implemented with Winsock. It uses the same loopback address and port, so you can compile it with GCC from [w64devkit](https://github.com/skeeto/w64devkit/releases/tag/v2.10.1) without converting the POSIX socket code yourself.
 - **Separate JavaScript UDP lab — `udpserver-javascript/index.mjs`:** a Node.js UDP listener using the built-in `dgram` module. It listens on `127.0.0.1:5500` and logs the received datagram and sender address.
 - **Dedicated Node.js project files:** `udpserver-javascript/package.json` and `package-lock.json` organize the JavaScript exercise as its own folder.
 - **Windows-oriented run instructions:** this README includes file-specific Go commands and PowerShell testing steps alongside the original networking references.
@@ -33,14 +34,15 @@ The original course examples are retained. These are the additional exercises in
 | [`udpserver-go/`](udpserver-go/) | Go | UDP server and client |
 | [`udpserver-nodejs/`](udpserver-nodejs/) | Node.js | UDP listener using `dgram` |
 | [`udpserver-javascript/`](udpserver-javascript/) | JavaScript | Additional standalone UDP listener |
-| [`udpserver-c/`](udpserver-c/) | C | Minimal POSIX UDP socket example |
+| [`udpserver-c/`](udpserver-c/) | C | POSIX UDP server for Linux/macOS/WSL plus a native Windows Winsock version |
 | [`tcp-nodelay-go/`](tcp-nodelay-go/) | Go | TCP_NODELAY and Nagle's algorithm experiment |
 
 ## Requirements
 
 - [Go](https://go.dev/dl/) for the Go examples.
 - [Node.js LTS](https://nodejs.org/en/download) for the Node.js examples.
-- A C compiler such as GCC, plus a POSIX-compatible environment (Linux, macOS, or WSL) for `udpserver-c`. The C source uses POSIX socket headers and is not directly compatible with native MSVC as written.
+- **GCC for the C exercises.** On Windows, download the portable [w64devkit v2.10.1 release](https://github.com/skeeto/w64devkit/releases/tag/v2.10.1). Choose `w64devkit-x64-2.10.1.7z.exe`, extract it, launch the included `w64devkit.exe` terminal, and verify the compiler with `gcc --version`. See the [w64devkit usage notes](https://github.com/skeeto/w64devkit#usage). This toolchain is portable and does not require a system-wide installation.
+- The C examples have separate source files for POSIX and native Windows networking: `main.c` uses POSIX socket headers and should be compiled in Linux, macOS, or WSL; `main-windows.c` uses Winsock and can be compiled natively on Windows with w64devkit. For WSL/Ubuntu, install the POSIX compiler with `sudo apt update && sudo apt install build-essential`.
 
 The examples use loopback addresses for local testing. You do not need to open router ports or expose these practice servers to your network.
 
@@ -132,9 +134,15 @@ The server should print the message and the sender address/port. UDP is connecti
 
 ### 5. C UDP server (Linux, macOS, or WSL)
 
-The C example uses POSIX socket headers. Run it from a POSIX-compatible shell, such as Ubuntu under WSL.
+The C example uses **POSIX socket APIs**, so run it from a POSIX-compatible environment such as Linux, macOS, or Ubuntu under WSL. On Ubuntu/WSL, install GCC and the standard build tools once:
 
-In **Terminal 1**, compile and run it:
+```bash
+sudo apt update
+sudo apt install build-essential
+gcc --version
+```
+
+In **Terminal 1**, compile and run the server:
 
 ```bash
 cd udpserver-c
@@ -148,7 +156,42 @@ In **Terminal 2**, send one datagram if Netcat is available:
 printf 'Hello from the client' | nc -u -w 1 127.0.0.1 5501
 ```
 
+**Windows note:** you can also install the portable [w64devkit GCC toolchain (v2.10.1)](https://github.com/skeeto/w64devkit/releases/tag/v2.10.1) for native Windows C/C++ development. However, this repository's current `main.c` uses POSIX networking headers and will not compile with the Windows toolchain unchanged; use WSL for this version or port the code to Winsock.
+
 This is a deliberately minimal learning example: it receives one datagram and then exits. The code is not intended as a production-ready UDP server.
+
+### 6. C UDP server on Windows (w64devkit + Winsock)
+
+Use this version for a native Windows build. The POSIX `main.c` uses headers that are not available in this form on Windows, so compile `main-windows.c` instead.
+
+1. Download the x64 [w64devkit v2.10.1 release](https://github.com/skeeto/w64devkit/releases/tag/v2.10.1), extract the self-extracting archive, and start `w64devkit.exe` from the extracted folder.
+2. In the w64devkit terminal, verify GCC is available:
+
+   ```sh
+   gcc --version
+   ```
+
+3. Change directory to your cloned repository's `udpserver-c` folder, then compile and run:
+
+   ```sh
+   gcc main-windows.c -o udpserver-windows.exe -lws2_32
+   ./udpserver-windows.exe
+   ```
+
+   The `-lws2_32` linker flag links the Windows Winsock library. The server binds to `127.0.0.1:5501`, receives one UDP datagram, prints it, and exits.
+
+4. While the server is waiting, open a **separate PowerShell window** and send a test datagram:
+
+   ```powershell
+   $udp = [System.Net.Sockets.UdpClient]::new()
+   $bytes = [System.Text.Encoding]::UTF8.GetBytes('Hello from Windows')
+   [void]$udp.Send($bytes, $bytes.Length, '127.0.0.1', 5501)
+   $udp.Dispose()
+   ```
+
+   The w64devkit terminal should display the received message and the sender address/port.
+
+Both C versions are for learning and receive a single datagram per run. They bind to the loopback address only, so you do not need to expose a server to your local network.
 
 ## TCP_NODELAY and Nagle's Algorithm
 

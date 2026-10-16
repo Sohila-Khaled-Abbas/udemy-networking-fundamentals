@@ -40,7 +40,8 @@ The original course examples are retained. These are the additional exercises in
 
 - [Go](https://go.dev/dl/) for the Go examples.
 - [Node.js LTS](https://nodejs.org/en/download) for the Node.js examples.
-- A C compiler such as GCC, plus a POSIX-compatible environment (Linux, macOS, or WSL) for `udpserver-c`. The C source uses POSIX socket headers and is not directly compatible with native MSVC as written.
+- **GCC for the C exercises.** On Windows, you can download the portable [w64devkit v2.10.1 release](https://github.com/skeeto/w64devkit/releases/tag/v2.10.1). Choose the x64 self-extracting package, `w64devkit-x64-2.10.1.7z.exe`, extract it to a folder, and launch the included `w64devkit.exe` terminal. Verify GCC is available by running `gcc --version`. See the [w64devkit documentation](https://github.com/skeeto/w64devkit#usage) for details. It is a portable toolchain and does not require a traditional system-wide installation.
+- **Important for `udpserver-c`:** the current `main.c` uses POSIX socket headers such as `sys/socket.h` and `netinet/in.h`. w64devkit provides a native Windows GCC toolchain, but those POSIX socket APIs are not available in that form on Windows. To compile this exact source without porting it, use GCC in Linux, macOS, or WSL. For WSL/Ubuntu, install the compiler with `sudo apt update && sudo apt install build-essential`. A native Windows build would require adapting the code to Winsock.
 
 The examples use loopback addresses for local testing. You do not need to open router ports or expose these practice servers to your network.
 
@@ -132,9 +133,15 @@ The server should print the message and the sender address/port. UDP is connecti
 
 ### 5. C UDP server (Linux, macOS, or WSL)
 
-The C example uses POSIX socket headers. Run it from a POSIX-compatible shell, such as Ubuntu under WSL.
+The C example uses **POSIX socket APIs**, so run it from a POSIX-compatible environment such as Linux, macOS, or Ubuntu under WSL. On Ubuntu/WSL, install GCC and the standard build tools once:
 
-In **Terminal 1**, compile and run it:
+```bash
+sudo apt update
+sudo apt install build-essential
+gcc --version
+```
+
+In **Terminal 1**, compile and run the server:
 
 ```bash
 cd udpserver-c
@@ -147,6 +154,8 @@ In **Terminal 2**, send one datagram if Netcat is available:
 ```bash
 printf 'Hello from the client' | nc -u -w 1 127.0.0.1 5501
 ```
+
+**Windows note:** you can also install the portable [w64devkit GCC toolchain (v2.10.1)](https://github.com/skeeto/w64devkit/releases/tag/v2.10.1) for native Windows C/C++ development. However, this repository's current `main.c` uses POSIX networking headers and will not compile with the Windows toolchain unchanged; use WSL for this version or port the code to Winsock.
 
 This is a deliberately minimal learning example: it receives one datagram and then exits. The code is not intended as a production-ready UDP server.
 

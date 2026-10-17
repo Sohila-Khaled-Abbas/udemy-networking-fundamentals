@@ -1,0 +1,13 @@
+{
+  "name": "section-06-protocols",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Hands-on labs for DNS, TLS, HTTPS, keys, and certificates",
+  "type": "module",
+  "scripts": {
+    "dns": "node dns-lookup.mjs",
+    "tls": "node tls-inspect.mjs",
+    "https:server": "node https-server.mjs",
+    "https:client": "node https-client.mjs"
+  }
+}

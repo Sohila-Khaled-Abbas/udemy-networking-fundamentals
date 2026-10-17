@@ -24,6 +24,7 @@ The original course examples are retained. These are the additional exercises in
 - **Dedicated Node.js project files:** `udpserver-javascript/package.json` and `package-lock.json` organize the JavaScript exercise as its own folder.
 - **Windows-oriented run instructions:** this README includes file-specific Go commands and PowerShell testing steps alongside the original networking references.
 - **TCP packet-capture lab — [`docs/tcpdump-capture-lab.md`](docs/tcpdump-capture-lab.md):** step-by-step `tcpdump` commands in WSL to capture the C TCP server's handshake, data, and teardown, with filters and PCAP export.
+- **Section 6 protocol labs — [`section-06-protocols/`](section-06-protocols/):** hands-on exercises for lessons 33–36 covering protocol layering, DNS records, TLS handshakes, HTTPS requests, and keys/certificates. Local development certificates and private keys are generated on your machine and excluded from Git.
 
 > **Note:** Node.js already includes the `dgram` module, so the JavaScript UDP example does not need a third-party package to run. Start it with `node .\index.mjs`.
 
@@ -35,6 +36,7 @@ The original course examples are retained. These are the additional exercises in
 | [`tcpserver-nodejs/`](tcpserver-nodejs/) | Node.js | TCP server using the built-in `net` module |
 | [`tcpserver-c/`](tcpserver-c/) | C | TCP server: POSIX source plus native Windows Winsock version |
 | [`docs/tcpdump-capture-lab.md`](docs/tcpdump-capture-lab.md) | Lab guide | Capture and interpret TCP segments with tcpdump in WSL |
+| [`section-06-protocols/`](section-06-protocols/) | Node.js / OpenSSL | Lessons 33–36: protocols, DNS, TLS, HTTPS, keys, and certificates |
 | [`udpserver-go/`](udpserver-go/) | Go | UDP server and client |
 | [`udpserver-nodejs/`](udpserver-nodejs/) | Node.js | UDP listener using `dgram` |
 | [`udpserver-javascript/`](udpserver-javascript/) | JavaScript | Additional standalone UDP listener |
@@ -45,6 +47,7 @@ The original course examples are retained. These are the additional exercises in
 
 - [Go](https://go.dev/dl/) for the Go examples.
 - [Node.js LTS](https://nodejs.org/en/download) for the Node.js examples.
+- [OpenSSL](https://www.openssl.org/) for generating the local test CA and localhost server certificate in Section 6. Only local development credentials are created; no private keys are stored in Git.
 - **GCC for the C exercises.** On Windows, download the portable [w64devkit v2.10.1 release](https://github.com/skeeto/w64devkit/releases/tag/v2.10.1). Choose `w64devkit-x64-2.10.1.7z.exe`, extract it, launch the included `w64devkit.exe` terminal, and verify the compiler with `gcc --version`. See the [w64devkit usage notes](https://github.com/skeeto/w64devkit#usage). This toolchain is portable and does not require a system-wide installation.
 - The C TCP and UDP examples provide POSIX source files (`main.c`) for Linux, macOS, or WSL and native Windows versions (`main-windows.c`) for w64devkit. Build the source file inside the relevant `tcpserver-c` or `udpserver-c` folder for your environment. For WSL/Ubuntu, install the POSIX compiler with `sudo apt update && sudo apt install build-essential`.
 

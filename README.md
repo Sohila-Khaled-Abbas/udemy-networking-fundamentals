@@ -17,6 +17,7 @@ This repository is based on the original project by [André Brandão](https://gi
 
 The original course examples are retained. These are the additional exercises in this version:
 
+- **C TCP server — `tcpserver-c/main.c` and `tcpserver-c/main-windows.c`:** a loopback-only TCP server for POSIX systems and native Windows, respectively. Both bind to `127.0.0.1:8801`, send a greeting to each client, and log received text.
 - **C UDP server — `udpserver-c/main.c`:** a minimal UDP socket example using POSIX sockets for Linux, macOS, or WSL. It binds to `127.0.0.1:5501` and receives one datagram. The source references [UDP Client-Server Program in C](https://github.com/nikhilroxtomar/UDP-Client-Server-Program-in-C).
 - **Native Windows C UDP server — `udpserver-c/main-windows.c`:** a Windows-compatible version implemented with Winsock. It uses the same loopback address and port, so you can compile it with GCC from [w64devkit](https://github.com/skeeto/w64devkit/releases/tag/v2.10.1) without converting the POSIX socket code yourself.
 - **Separate JavaScript UDP lab — `udpserver-javascript/index.mjs`:** a Node.js UDP listener using the built-in `dgram` module. It listens on `127.0.0.1:5500` and logs the received datagram and sender address.
@@ -31,6 +32,7 @@ The original course examples are retained. These are the additional exercises in
 | --- | --- | --- |
 | [`tcpserver-go/`](tcpserver-go/) | Go | TCP server, interactive client, and a concurrent server |
 | [`tcpserver-nodejs/`](tcpserver-nodejs/) | Node.js | TCP server using the built-in `net` module |
+| [`tcpserver-c/`](tcpserver-c/) | C | TCP server: POSIX source plus native Windows Winsock version |
 | [`udpserver-go/`](udpserver-go/) | Go | UDP server and client |
 | [`udpserver-nodejs/`](udpserver-nodejs/) | Node.js | UDP listener using `dgram` |
 | [`udpserver-javascript/`](udpserver-javascript/) | JavaScript | Additional standalone UDP listener |
@@ -42,7 +44,7 @@ The original course examples are retained. These are the additional exercises in
 - [Go](https://go.dev/dl/) for the Go examples.
 - [Node.js LTS](https://nodejs.org/en/download) for the Node.js examples.
 - **GCC for the C exercises.** On Windows, download the portable [w64devkit v2.10.1 release](https://github.com/skeeto/w64devkit/releases/tag/v2.10.1). Choose `w64devkit-x64-2.10.1.7z.exe`, extract it, launch the included `w64devkit.exe` terminal, and verify the compiler with `gcc --version`. See the [w64devkit usage notes](https://github.com/skeeto/w64devkit#usage). This toolchain is portable and does not require a system-wide installation.
-- The C examples have separate source files for POSIX and native Windows networking: `main.c` uses POSIX socket headers and should be compiled in Linux, macOS, or WSL; `main-windows.c` uses Winsock and can be compiled natively on Windows with w64devkit. For WSL/Ubuntu, install the POSIX compiler with `sudo apt update && sudo apt install build-essential`.
+- The C TCP and UDP examples provide POSIX source files (`main.c`) for Linux, macOS, or WSL and native Windows versions (`main-windows.c`) for w64devkit. Build the source file inside the relevant `tcpserver-c` or `udpserver-c` folder for your environment. For WSL/Ubuntu, install the POSIX compiler with `sudo apt update && sudo apt install build-essential`.
 
 The examples use loopback addresses for local testing. You do not need to open router ports or expose these practice servers to your network.
 
@@ -110,7 +112,58 @@ Test-NetConnection 127.0.0.1 -Port 5500
 
 A successful test reports `TcpTestSucceeded : True`. The server logs when a client connects. Stop the server with `Ctrl+C` when you are done.
 
-### 4. Standalone JavaScript TCP server
+### 4. C TCP server (Linux/macOS/WSL or native Windows)
+
+The C TCP server listens on `127.0.0.1:8801`, sends a greeting to each client, and logs any text the client sends. It keeps listening until you stop it with `Ctrl+C`.
+
+**Native Windows with w64devkit**
+
+Open the w64devkit terminal and change to the repository's `tcpserver-c` folder. If you are at the repository root, run:
+
+```sh
+cd tcpserver-c
+gcc main-windows.c -o tcpserver-windows.exe -lws2_32
+./tcpserver-windows.exe
+```
+
+Expected startup message: `TCP server listening on 127.0.0.1:8801`. The `-lws2_32` flag links the Windows Winsock library. Do not compile `main.c` with native Windows w64devkit because it uses POSIX headers.
+
+**Linux, macOS, or WSL**
+
+From the repository root, run:
+
+```bash
+cd tcpserver-c
+gcc -Wall -Wextra main.c -o tcpserver
+./tcpserver
+```
+
+**Test from Windows PowerShell**
+
+Keep the server running. In a separate PowerShell window, check the TCP port:
+
+```powershell
+Test-NetConnection 127.0.0.1 -Port 8801
+```
+
+Look for `TcpTestSucceeded : True`. Then send a message and read the greeting:
+
+```powershell
+$client = [System.Net.Sockets.TcpClient]::new()
+$client.Connect('127.0.0.1', 8801)
+$stream = $client.GetStream()
+$reader = [System.IO.StreamReader]::new($stream)
+$writer = [System.IO.StreamWriter]::new($stream)
+$writer.AutoFlush = $true
+$greeting = $reader.ReadLine()
+$greeting
+$writer.WriteLine('Hello from PowerShell')
+$client.Dispose()
+```
+
+PowerShell should print `Hello from C TCP server!`, and the server window should log `Received: Hello from PowerShell`. The port check creates a brief test connection of its own; the server continues listening afterward. These examples bind to loopback only, so they do not expose the service to your network.
+
+### 5. Standalone JavaScript TCP server
 
 This additional TCP exercise lives in `tcpserver-javascript/`. It uses Node.js's built-in `net` module and listens on `127.0.0.1:5500`.
 
@@ -147,7 +200,7 @@ The client should read the server greeting, and Terminal 1 should log the messag
 
 If the test fails, confirm the server is still running and that both commands use port `5500`. If Node.js reports `EADDRINUSE`, another process is already listening on that port; stop that process or change the port in both the server and test.
 
-### 5. Node.js UDP server
+### 6. Node.js UDP server
 
 Run either the original Node.js UDP example or the additional JavaScript example. **Do not start both at once** because both bind to `127.0.0.1:5500`.
 
@@ -169,7 +222,7 @@ $udp.Dispose()
 
 The server should print the message and the sender address/port. UDP is connectionless, so this test sends a datagram rather than establishing a TCP connection.
 
-### 6. C UDP server (Linux, macOS, or WSL)
+### 7. C UDP server (Linux, macOS, or WSL)
 
 The C example uses **POSIX socket APIs**, so run it from a POSIX-compatible environment such as Linux, macOS, or Ubuntu under WSL. On Ubuntu/WSL, install GCC and the standard build tools once:
 
@@ -197,7 +250,7 @@ printf 'Hello from the client' | nc -u -w 1 127.0.0.1 5501
 
 This is a deliberately minimal learning example: it receives one datagram and then exits. The code is not intended as a production-ready UDP server.
 
-### 7. C UDP server on Windows (w64devkit + Winsock)
+### 8. C UDP server on Windows (w64devkit + Winsock)
 
 Use this version for a native Windows build. The POSIX `main.c` uses headers that are not available in this form on Windows, so compile `main-windows.c` instead.
 

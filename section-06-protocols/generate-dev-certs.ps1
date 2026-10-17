@@ -2,7 +2,7 @@ $ErrorActionPreference = 'Stop'
 Set-Location $PSScriptRoot
 
 if (-not (Get-Command openssl -ErrorAction SilentlyContinue)) {
-    Write-Error 'OpenSSL was not found on PATH. Try running this script from Git Bash, or install OpenSSL and reopen the terminal.'
+    Write-Error 'OpenSSL was not found on PATH. Install OpenSSL or add the folder containing openssl.exe to PATH, then reopen PowerShell.'
     exit 1
 }
 

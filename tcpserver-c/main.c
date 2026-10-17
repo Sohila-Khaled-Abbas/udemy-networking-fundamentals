@@ -1,46 +1,100 @@
-//https://github.com/nikhilroxtomar/tcp-client-server-in-C
+// POSIX TCP server for Linux, macOS, and WSL.
+// Windows users should build main-windows.c with w64devkit instead.
 
+#include <arpa/inet.h>
+#include <errno.h>
+#include <netinet/in.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
-#include <sys/types.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
+#include <unistd.h>
 
+#define HOST "127.0.0.1"
 #define PORT 8801
+#define BACKLOG 5
+#define BUFFER_SIZE 1024
 
-int main(){
+int main(void) {
+    int server_fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (server_fd == -1) {
+        perror("socket");
+        return EXIT_FAILURE;
+    }
 
-	int sockfd;
-	struct sockaddr_in serverAddr;
+    int reuse = 1;
+    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) == -1) {
+        perror("setsockopt");
+        close(server_fd);
+        return EXIT_FAILURE;
+    }
 
-	int newSocket;
-	struct sockaddr_in newAddr;
+    struct sockaddr_in server_addr;
+    memset(&server_addr, 0, sizeof(server_addr));
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(PORT);
 
-	socklen_t addr_size;
-	char buffer[1024];
+    if (inet_pton(AF_INET, HOST, &server_addr.sin_addr) != 1) {
+        fprintf(stderr, "Invalid bind address: %s\n", HOST);
+        close(server_fd);
+        return EXIT_FAILURE;
+    }
 
-	sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	printf("Server Socket Created Sucessfully.\n");
-	memset(&serverAddr, '\0', sizeof(serverAddr));
+    if (bind(server_fd, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1) {
+        perror("bind");
+        close(server_fd);
+        return EXIT_FAILURE;
+    }
 
-	serverAddr.sin_family = AF_INET;
-	serverAddr.sin_port = htons(PORT);
-	serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    if (listen(server_fd, BACKLOG) == -1) {
+        perror("listen");
+        close(server_fd);
+        return EXIT_FAILURE;
+    }
 
-	bind(sockfd, (struct sockaddr*)&serverAddr, sizeof(serverAddr));
-	printf("[+]Bind to Port number %d.\n", PORT);
+    printf("TCP server listening on %s:%d\n", HOST, PORT);
+    printf("Press Ctrl+C to stop the server.\n");
 
-	listen(sockfd, 5);
-	printf("[+]Listening...\n");
+    for (;;) {
+        struct sockaddr_in client_addr;
+        socklen_t client_len = sizeof(client_addr);
+        int client_fd = accept(server_fd, (struct sockaddr *)&client_addr, &client_len);
 
-	newSocket = accept(sockfd, (struct sockaddr*)&newAddr, &addr_size);
+        if (client_fd == -1) {
+            if (errno == EINTR) {
+                continue;
+            }
+            perror("accept");
+            break;
+        }
 
-	strcpy(buffer, "Hello");
-	send(newSocket, buffer, strlen(buffer), 0);
-	printf("[+]Closing the connection.\n");
+        char client_ip[INET_ADDRSTRLEN] = "unknown";
+        (void)inet_ntop(AF_INET, &client_addr.sin_addr, client_ip, sizeof(client_ip));
+        printf("Client connected: %s:%u\n", client_ip, (unsigned int)ntohs(client_addr.sin_port));
 
-    return 0;
+        const char greeting[] = "Hello from C TCP server!\n";
+        if (send(client_fd, greeting, sizeof(greeting) - 1, 0) == -1) {
+            perror("send");
+        }
 
+        char buffer[BUFFER_SIZE];
+        ssize_t received = recv(client_fd, buffer, sizeof(buffer), 0);
+        if (received > 0) {
+            printf("Received: ");
+            (void)fwrite(buffer, 1, (size_t)received, stdout);
+            if (buffer[received - 1] != '\n') {
+                putchar('\n');
+            }
+        } else if (received == 0) {
+            printf("Client disconnected without sending data.\n");
+        } else {
+            perror("recv");
+        }
+
+        close(client_fd);
+    }
+
+    close(server_fd);
+    return EXIT_SUCCESS;
 }

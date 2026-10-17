@@ -24,6 +24,7 @@ This repository accompanies [Fundamentals of Networking for Effective Backend De
 
 - [Learning path](#learning-path)
 - [SQL Server local-only access control](docs/sql-server-local-access-control.md)
+- [Routing and Docker httpd networking labs](docs/routing-and-docker-httpd-labs.md)
 - [Lab catalog](#lab-catalog)
 - [Environment setup](#environment-setup)
 - [Run your first lab](#run-your-first-lab)
@@ -46,6 +47,7 @@ Follow this sequence so each layer gives context to the next:
 | 6 · Observability | What can a packet capture show that application logs cannot? | [TCP packet-capture lab](docs/tcpdump-capture-lab.md) |
 | 7 · Performance | How can small TCP writes interact with Nagle's algorithm? | [TCP_NODELAY experiment](tcp-nodelay-go/) |
 | 8 · Database access control | How can a local SQL Server listener be kept off the network without breaking local BI/ETL tools? | [SQL Server local-only firewall lab](docs/sql-server-local-access-control.md) |
+| 9 · Routing and containers | How do host routes, Docker bridge networks, container IPs, and published ports fit together? | [Routing + Docker httpd labs](docs/routing-and-docker-httpd-labs.md) |
 
 ## Lab catalog
 
@@ -64,6 +66,7 @@ Follow this sequence so each layer gives context to the next:
 | TCP capture and filters | `tcpdump` in WSL | [capture guide](docs/tcpdump-capture-lab.md) |
 | Small-write behavior | Go TCP client/server | [tcp-nodelay-go](tcp-nodelay-go/) |
 | SQL Server local-only access control | Windows Defender Firewall + PowerShell discovery | [SQL Server firewall lab](docs/sql-server-local-access-control.md) |
+| Host routing + Docker HTTP | Windows routing table, Docker bridge, official Apache `httpd:2.4` image | [Routing and Docker httpd labs](docs/routing-and-docker-httpd-labs.md) |
 
 The exercises are intentionally small. They are for learning protocol behavior—not production servers, load testing, or security testing against systems you do not own.
 
@@ -77,6 +80,7 @@ Core tools:
 - **A C compiler** — use [w64devkit](https://github.com/skeeto/w64devkit/releases) for the Windows Winsock files, or GCC in Linux/WSL for the POSIX files.
 - **OpenSSL** — needed only for generating the local test credentials in Section 6.
 - **WSL + tcpdump** — optional, for the packet-capture lab.
+- **Docker Desktop** — optional, for the routing and Docker `httpd` labs; use Linux containers and keep published lab ports bound to `127.0.0.1`.
 
 Check what is available in PowerShell:
 
@@ -151,7 +155,7 @@ That habit transfers directly to debugging ingestion jobs, API integrations, dat
 ```text
 .
 ├── .github/workflows/validate.yml  # automated syntax/build checks
-├── docs/                           # packet capture, SQL Server firewall, and learning notes
+├── docs/                           # packet capture, SQL Server firewall, routing, Docker, and learning notes
 ├── http-module/                    # built-in Node.js HTTP lab
 ├── section-06-protocols/            # DNS, TLS, certificates, HTTPS
 ├── tcp-nodelay-go/                  # TCP_NODELAY / Nagle experiment

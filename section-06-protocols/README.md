@@ -198,7 +198,7 @@ Stop the HTTPS server with Ctrl+C.
 
 ## Troubleshooting
 
-- **`ENOENT` for a PEM file:** run `.`\generate-dev-certs.ps1` from this folder and confirm `certs\localhost-key.pem`, `localhost-cert.pem`, and `dev-ca-cert.pem` exist.
+- **`ENOENT` for a PEM file:** run `.\generate-dev-certs.ps1` from this folder and confirm `certs\localhost-key.pem`, `localhost-cert.pem`, and `dev-ca-cert.pem` exist.
 - **OpenSSL not recognized:** use a terminal where OpenSSL is available, or install OpenSSL. The Node.js scripts themselves do not need packages from npm.
 - **`EADDRINUSE` on 8443:** another process is using the port; stop it or change `PORT` in `https-server.mjs` and the client port in `https-client.mjs`.
 - **Certificate is not trusted / host mismatch:** regenerate the files using the supplied script/config files, run the client as documented, and check that the CA file comes from this same `certs\` folder.

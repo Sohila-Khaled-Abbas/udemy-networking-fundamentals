@@ -11,7 +11,7 @@
 
 Hands-on networking exercises inspired by Hussein Nasser's Udemy course, [Fundamentals of Networking for Effective Backend Design](https://www.udemy.com/course/fundamentals-of-networking-for-effective-backend-design/).
 
-This repository is based on the original project by [André Brandão](https://github.com/andrenbrandao/udemy-networking-fundamentals). It explores TCP, UDP, socket programming, concurrent connections, and TCP latency behavior through small examples in Go and Node.js, with additional C and JavaScript UDP exercises.
+This repository is based on the original project by [André Brandão](https://github.com/andrenbrandao/udemy-networking-fundamentals). It explores TCP, UDP, socket programming, concurrent connections, HTTP request/response behavior, and TCP latency through small examples in Go, C, and Node.js, alongside DNS, TLS, HTTPS, keys, certificates, and packet-capture exercises.
 
 ## What I Added to the Original Repository
 
@@ -24,6 +24,7 @@ The original course examples are retained. These are the additional exercises in
 - **Dedicated Node.js project files:** `udpserver-javascript/package.json` and `package-lock.json` organize the JavaScript exercise as its own folder.
 - **Windows-oriented run instructions:** this README includes file-specific Go commands and PowerShell testing steps alongside the original networking references.
 - **TCP packet-capture lab — [`docs/tcpdump-capture-lab.md`](docs/tcpdump-capture-lab.md):** step-by-step `tcpdump` commands in WSL to capture the C TCP server's handshake, data, and teardown, with filters and PCAP export.
+- **Node.js HTTP module — [`http-module/`](http-module/):** a minimal built-in `http` server on `127.0.0.1:8080`, with a start script, request logging, plain-text `OK!` responses, and PowerShell test commands.
 - **Section 6 protocol labs — [`section-06-protocols/`](section-06-protocols/):** hands-on exercises for lessons 33–36 covering protocol layering, DNS records, TLS handshakes, HTTPS requests, and keys/certificates. Local development certificates and private keys are generated on your machine and excluded from Git.
 
 > **Note:** Node.js already includes the `dgram` module, so the JavaScript UDP example does not need a third-party package to run. Start it with `node .\index.mjs`.
@@ -34,6 +35,7 @@ The original course examples are retained. These are the additional exercises in
 | --- | --- | --- |
 | [`tcpserver-go/`](tcpserver-go/) | Go | TCP server, interactive client, and a concurrent server |
 | [`tcpserver-nodejs/`](tcpserver-nodejs/) | Node.js | TCP server using the built-in `net` module |
+| [`http-module/`](http-module/) | Node.js | Minimal HTTP request/response server using the built-in `http` module |
 | [`tcpserver-c/`](tcpserver-c/) | C | TCP server: POSIX source plus native Windows Winsock version |
 | [`docs/tcpdump-capture-lab.md`](docs/tcpdump-capture-lab.md) | Lab guide | Capture and interpret TCP segments with tcpdump in WSL |
 | [`section-06-protocols/`](section-06-protocols/) | Node.js / OpenSSL | Lessons 33–36: protocols, DNS, TLS, HTTPS, keys, and certificates |
@@ -287,6 +289,37 @@ Use this version for a native Windows build. The POSIX `main.c` uses headers tha
    The w64devkit terminal should display the received message and the sender address/port.
 
 Both C versions are for learning and receive a single datagram per run. They bind to the loopback address only, so you do not need to expose a server to your local network.
+
+### 9. Node.js HTTP module
+
+The `http-module/` folder demonstrates Node.js's built-in HTTP server. It listens on `127.0.0.1:8080`, logs the incoming request method/path, and responds with plain text `OK!`. It uses no third-party packages.
+
+In **Terminal 1**, from the repository root:
+
+```powershell
+Set-Location .\http-module
+npm start
+```
+
+Expected output:
+
+```text
+HTTP server listening at http://127.0.0.1:8080
+Press Ctrl+C to stop the server.
+```
+
+In **Terminal 2**, check the TCP listener and then send an HTTP request:
+
+```powershell
+Test-NetConnection 127.0.0.1 -Port 8080
+$response = Invoke-WebRequest -Uri 'http://127.0.0.1:8080/'
+$response.StatusCode
+$response.Content
+```
+
+Expected HTTP output is status `200` and body `OK!`. For headers and body together, you can use `curl.exe -i http://127.0.0.1:8080/`.
+
+This is ordinary HTTP, not HTTPS, and does not encrypt traffic. The server is explicitly bound to loopback for local practice. See [`http-module/README.md`](http-module/README.md) for explanations and troubleshooting, and [`section-06-protocols/README.md`](section-06-protocols/README.md) for the separate TLS/HTTPS lab.
 
 ## TCP_NODELAY and Nagle's Algorithm
 

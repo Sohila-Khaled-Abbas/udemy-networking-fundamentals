@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="490" viewBox="0 0 1000 490" role="img" aria-labelledby="title desc">
+<title id="title">UDP packet inspection</title><desc id="desc">Follow each local datagram from sender to receiver.</desc>
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0b1220"/><stop offset="1" stop-color="#101f34"/></linearGradient><linearGradient id="glow" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#51d5ef" stop-opacity=".2"/><stop offset="1" stop-color="#b7a0ff" stop-opacity=".03"/></linearGradient></defs>
+<rect width="1000" height="490" rx="26" fill="url(#bg)"/>
+<circle cx="930" cy="58" r="110" fill="#b7a0ff" opacity=".055"/><circle cx="85" cy="475" r="145" fill="#51d5ef" opacity=".045"/>
+<rect x="32" y="28" width="936" height="4" rx="2" fill="url(#glow)"/>
+<text x="56" y="76" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="30" font-weight="700" fill="#f3f7ff">UDP packet inspection</text>
+<text x="56" y="108" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="15" fill="#a7b7d0">Follow each local datagram from sender to receiver.</text>
+<rect x="56" y="150" width="205" height="140" rx="18" fill="#15243a" stroke="#3f5577" stroke-width="1.5"/>
+ <text x="158" y="185" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="18" font-weight="700" fill="#f3f7ff" text-anchor="middle">UDP SENDER</text>
+ <text x="158" y="215" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="14" font-weight="400" fill="#a7b7d0" text-anchor="middle">127.0.0.1</text>
+ <rect x="84" y="232" width="148" height="36" rx="10" fill="#2c2432" stroke="#815c44" stroke-width="1.5"/>
+ <text x="158" y="255" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="14" font-weight="700" fill="#ffbf69" text-anchor="middle">sendto()</text>
+ <line x1="262" y1="219" x2="380" y2="219" stroke="#ffbf69" stroke-width="3" stroke-linecap="round" /><path d="M 371 213 L 380 219 L 371 225" fill="none" stroke="#ffbf69" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+ <text x="320" y="202" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12" font-weight="700" fill="#ffbf69" text-anchor="middle">datagram</text>
+ <rect x="380" y="160" width="240" height="118" rx="18" fill="#2a2430" stroke="#815c44" stroke-width="1.5"/>
+ <text x="500" y="190" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="17" font-weight="700" fill="#f3f7ff" text-anchor="middle">UDP DATAGRAM</text>
+ <rect x="400" y="204" width="92" height="48" rx="8" fill="#413024" stroke="#a87946" stroke-width="1.5"/>
+ <text x="446" y="224" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12" font-weight="600" fill="#ffbf69" text-anchor="middle">Src port</text>
+ <text x="446" y="241" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="10" font-weight="400" fill="#a7b7d0" text-anchor="middle">ephemeral</text>
+ <rect x="502" y="204" width="98" height="48" rx="8" fill="#413024" stroke="#a87946" stroke-width="1.5"/>
+ <text x="551" y="224" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12" font-weight="600" fill="#ffbf69" text-anchor="middle">Dst port</text>
+ <text x="551" y="241" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12" font-weight="700" fill="#f3f7ff" text-anchor="middle">9999</text>
+ <line x1="621" y1="219" x2="739" y2="219" stroke="#ffbf69" stroke-width="3" stroke-linecap="round" /><path d="M 730 213 L 739 219 L 730 225" fill="none" stroke="#ffbf69" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+ <rect x="739" y="150" width="205" height="140" rx="18" fill="#15243a" stroke="#3f5577" stroke-width="1.5"/>
+ <text x="841" y="185" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="18" font-weight="700" fill="#f3f7ff" text-anchor="middle">UDP RECEIVER</text>
+ <text x="841" y="215" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="14" font-weight="400" fill="#a7b7d0" text-anchor="middle">127.0.0.1:9999</text>
+ <rect x="764" y="232" width="154" height="36" rx="10" fill="#203a38" stroke="#3c8e79" stroke-width="1.5"/>
+ <text x="841" y="255" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="14" font-weight="700" fill="#65e6c1" text-anchor="middle">recvfrom()</text>
+ <rect x="56" y="330" width="888" height="100" rx="16" fill="#101d30" stroke="#293b57" stroke-width="1.5"/>
+ <text x="80" y="360" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="13" font-weight="700" fill="#a7b7d0" text-anchor="start">WHAT TO OBSERVE</text>
+ <text x="80" y="391" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16" font-weight="500" fill="#f3f7ff" text-anchor="start">Each send is a separate datagram. UDP does not establish a handshake or promise delivery.</text>
+ <text x="80" y="414" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12" font-weight="400" fill="#a7b7d0" text-anchor="start">Wireshark display filter:</text> <rect x="256" y="393" width="182" height="27" rx="8" fill="#0a1422" stroke="#394e6d" stroke-width="1.5"/> <text x="347" y="412" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="13" font-weight="600" fill="#ffbf69" text-anchor="middle">udp.port == 9999</text>
+<text x="56" y="466" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12" fill="#7e91ad">NETWORKING FUNDAMENTALS • HANDS-ON LAB NOTEBOOK</text>
+</svg>

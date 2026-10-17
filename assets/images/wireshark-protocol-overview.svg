@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="420" viewBox="0 0 1000 420" role="img" aria-labelledby="title desc">
+<title id="title">Wireshark protocol labs</title><desc id="desc">Five guided packet-analysis experiments, from UDP datagrams to encrypted HTTP/2.</desc>
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0b1220"/><stop offset="1" stop-color="#101f34"/></linearGradient><linearGradient id="glow" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#51d5ef" stop-opacity=".2"/><stop offset="1" stop-color="#b7a0ff" stop-opacity=".03"/></linearGradient></defs>
+<rect width="1000" height="420" rx="26" fill="url(#bg)"/>
+<circle cx="930" cy="58" r="110" fill="#b7a0ff" opacity=".055"/><circle cx="85" cy="405" r="145" fill="#51d5ef" opacity=".045"/>
+<rect x="32" y="28" width="936" height="4" rx="2" fill="url(#glow)"/>
+<text x="56" y="76" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="30" font-weight="700" fill="#f3f7ff">Wireshark protocol labs</text>
+<text x="56" y="108" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="15" fill="#a7b7d0">Five guided packet-analysis experiments, from UDP datagrams to encrypted HTTP/2.</text>
+<rect x="48" y="138" width="904" height="168" rx="20" fill="#0f1a2b" stroke="#24364f" stroke-width="1.5"/>
+ <text x="72" y="170" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="13" font-weight="700" fill="#a7b7d0" text-anchor="start">FROM APPLICATION BEHAVIOR TO PACKETS</text>
+ <line x1="90" y1="220" x2="910" y2="220" stroke="#2a3c58" stroke-width="2" stroke-linecap="round" stroke-dasharray="5 8"/><rect x="56" y="188" width="152" height="92" rx="15" fill="#17263d" stroke="#2e4260" stroke-width="1.5"/>
+    <circle cx="79" cy="211" r="5" fill="#ffbf69"/>
+    <text x="71" y="241" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="17" font-weight="700" fill="#f3f7ff" text-anchor="start">UDP</text>
+    <text x="71" y="261" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="11" font-weight="400" fill="#a7b7d0" text-anchor="start">Datagrams</text>
+    <text x="191" y="207" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="11" font-weight="700" fill="#ffbf69" text-anchor="end">01</text><rect x="236" y="188" width="152" height="92" rx="15" fill="#17263d" stroke="#2e4260" stroke-width="1.5"/>
+    <circle cx="259" cy="211" r="5" fill="#51d5ef"/>
+    <text x="251" y="241" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="17" font-weight="700" fill="#f3f7ff" text-anchor="start">TCP / HTTP</text>
+    <text x="251" y="261" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="11" font-weight="400" fill="#a7b7d0" text-anchor="start">Handshake + stream</text>
+    <text x="371" y="207" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="11" font-weight="700" fill="#51d5ef" text-anchor="end">02</text><rect x="416" y="188" width="152" height="92" rx="15" fill="#17263d" stroke="#2e4260" stroke-width="1.5"/>
+    <circle cx="439" cy="211" r="5" fill="#b7a0ff"/>
+    <text x="431" y="241" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="17" font-weight="700" fill="#f3f7ff" text-anchor="start">HTTP/2 + TLS</text>
+    <text x="431" y="261" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="11" font-weight="400" fill="#a7b7d0" text-anchor="start">Authorized decryption</text>
+    <text x="551" y="207" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="11" font-weight="700" fill="#b7a0ff" text-anchor="end">03</text><rect x="596" y="188" width="152" height="92" rx="15" fill="#17263d" stroke="#2e4260" stroke-width="1.5"/>
+    <circle cx="619" cy="211" r="5" fill="#65e6c1"/>
+    <text x="611" y="241" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="17" font-weight="700" fill="#f3f7ff" text-anchor="start">MongoDB</text>
+    <text x="611" y="261" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="11" font-weight="400" fill="#a7b7d0" text-anchor="start">Wire protocol</text>
+    <text x="731" y="207" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="11" font-weight="700" fill="#65e6c1" text-anchor="end">04</text><rect x="776" y="188" width="152" height="92" rx="15" fill="#17263d" stroke="#2e4260" stroke-width="1.5"/>
+    <circle cx="799" cy="211" r="5" fill="#7aa9ff"/>
+    <text x="791" y="241" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="17" font-weight="700" fill="#f3f7ff" text-anchor="start">SSE</text>
+    <text x="791" y="261" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="11" font-weight="400" fill="#a7b7d0" text-anchor="start">Streaming events</text>
+    <text x="911" y="207" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="11" font-weight="700" fill="#7aa9ff" text-anchor="end">05</text><text x="56" y="352" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="13" font-weight="700" fill="#51d5ef" text-anchor="start">CAPTURE</text> <text x="176" y="352" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="13" font-weight="700" fill="#b7a0ff" text-anchor="start">FILTER</text> <text x="296" y="352" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="13" font-weight="700" fill="#65e6c1" text-anchor="start">FOLLOW STREAM</text> <text x="476" y="352" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="13" font-weight="700" fill="#f3f7ff" text-anchor="start">EXPLAIN WHAT THE EVIDENCE PROVES</text>
+ <line x1="113" y1="348" x2="157" y2="348" stroke="#51d5ef" stroke-width="2" stroke-linecap="round" /><path d="M 148 342 L 157 348 L 148 354" fill="none" stroke="#51d5ef" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <line x1="242" y1="348" x2="277" y2="348" stroke="#b7a0ff" stroke-width="2" stroke-linecap="round" /><path d="M 268 342 L 277 348 L 268 354" fill="none" stroke="#b7a0ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <line x1="394" y1="348" x2="456" y2="348" stroke="#65e6c1" stroke-width="2" stroke-linecap="round" /><path d="M 447 342 L 456 348 L 447 354" fill="none" stroke="#65e6c1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+ <text x="56" y="385" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="13" font-weight="400" fill="#a7b7d0" text-anchor="start">Original vector diagrams • Windows-first examples • Local and authorized traffic</text>
+<text x="56" y="396" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12" fill="#7e91ad">NETWORKING FUNDAMENTALS • HANDS-ON LAB NOTEBOOK</text>
+</svg>

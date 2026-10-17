@@ -3,52 +3,53 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"log"
 	"net"
 	"strings"
 )
 
 func main() {
-	port := ":" + "8000"
-
-	// Create a listening socket.
-	l, err := net.Listen("tcp", port)
+	// Keep this performance experiment local; the client targets localhost.
+	listener, err := net.Listen("tcp", "127.0.0.1:8000")
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer l.Close()
+	defer listener.Close()
 
 	for {
-		// Accept new connections.
-		c, err := l.Accept()
+		conn, err := listener.Accept()
 		if err != nil {
 			log.Println(err)
 			return
 		}
 
-		// Process newly accepted connection.
-		go handleConnection(c)
+		go handleConnection(conn)
 	}
 }
-func handleConnection(c net.Conn) {
-	fmt.Printf("Serving %s\n", c.RemoteAddr().String())
 
+func handleConnection(conn net.Conn) {
+	defer conn.Close()
+	fmt.Printf("Serving %s\n", conn.RemoteAddr())
+
+	reader := bufio.NewReader(conn)
 	for {
-		// Read what has been sent from the client.
-		netData, err := bufio.NewReader(c).ReadString('\n')
+		message, err := reader.ReadString('\n')
 		if err != nil {
-			log.Println(err)
+			if err != io.EOF {
+				log.Printf("Read from %s: %v", conn.RemoteAddr(), err)
+			}
 			return
 		}
 
-		cdata := strings.TrimSpace(netData)
-		if cdata == "GOPHER" {
-			c.Write([]byte("GopherAcademy Advent 2019!"))
-		}
-
-		if cdata == "EXIT" {
-			break
+		switch strings.TrimSpace(message) {
+		case "GOPHER":
+			if _, err := conn.Write([]byte("GopherAcademy Advent 2019!")); err != nil {
+				log.Printf("Write to %s: %v", conn.RemoteAddr(), err)
+				return
+			}
+		case "EXIT":
+			return
 		}
 	}
-	c.Close()
 }

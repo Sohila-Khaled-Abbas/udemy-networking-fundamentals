@@ -3,36 +3,59 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"net"
 	"os"
 	"strings"
 )
 
 func main() {
-	arguments := os.Args
-	if len(arguments) == 1 {
-		fmt.Println("Please provide host:port.")
-		return
+	if len(os.Args) < 2 {
+		fmt.Fprintln(os.Stderr, "Usage: go run client.go 127.0.0.1:5500")
+		os.Exit(2)
 	}
 
-	CONNECT := arguments[1]
-	c, err := net.Dial("tcp", CONNECT)
+	conn, err := net.Dial("tcp", os.Args[1])
 	if err != nil {
-		fmt.Println(err)
-		return
+		fmt.Fprintf(os.Stderr, "Could not connect to server: %v\n", err)
+		os.Exit(1)
 	}
+	defer conn.Close()
+
+	stdin := bufio.NewReader(os.Stdin)
+	serverReader := bufio.NewReader(conn)
 
 	for {
-		reader := bufio.NewReader(os.Stdin)
 		fmt.Print(">> ")
-		text, _ := reader.ReadString('\n')
-		fmt.Fprintf(c, text+"\n")
+		line, readErr := stdin.ReadString('\n')
+		if readErr != nil && len(line) == 0 {
+			if readErr != io.EOF {
+				fmt.Fprintf(os.Stderr, "Could not read input: %v\n", readErr)
+			}
+			return
+		}
 
-		message, _ := bufio.NewReader(c).ReadString('\n')
-		fmt.Print("->: " + message)
-		if strings.TrimSpace(string(text)) == "exit" {
-			fmt.Println("TCP client exiting...")
-			c.Close()
+		message := strings.TrimRight(line, "\r\n")
+		if _, err := fmt.Fprintln(conn, message); err != nil {
+			fmt.Fprintf(os.Stderr, "Could not send message: %v\n", err)
+			return
+		}
+
+		// The sample server closes the connection after receiving "exit",
+		// so don't wait for a reply to that command.
+		if strings.TrimSpace(message) == "exit" {
+			fmt.Println("TCP client exiting.")
+			return
+		}
+
+		response, err := serverReader.ReadString('\n')
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Could not read server response: %v\n", err)
+			return
+		}
+		fmt.Print("->: " + response)
+
+		if readErr == io.EOF {
 			return
 		}
 	}

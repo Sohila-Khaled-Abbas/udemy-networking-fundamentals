@@ -1,0 +1,65 @@
+name: Validate networking labs
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  static-checks:
+    name: Syntax and build checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: stable
+
+      - name: Check JavaScript syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r -d '' file; do
+            echo "Checking $file"
+            node --check "$file"
+          done < <(find . -type f \( -name '*.js' -o -name '*.mjs' \) -not -path '*/node_modules/*' -not -path '*/.git/*' -print0)
+
+      - name: Compile each standalone Go example
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r -d '' file; do
+            output="$RUNNER_TEMP/go-check-$(printf '%s' "$file" | tr '/.' '__')"
+            echo "Building $file"
+            go build -o "$output" "$file"
+          done < <(find . -type f -name '*.go' -not -path '*/vendor/*' -print0)
+
+      - name: Check POSIX C examples
+        run: gcc -Wall -Wextra -fsyntax-only tcpserver-c/main.c udpserver-c/main.c
+
+      - name: Guard against generated files and private lab keys
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git ls-files | grep -E '(^|/)(a\.out|[^/]+\.exe|[^/]+\.pcap(ng)?)$|(^|/)(dev-ca-key|localhost-key)\.pem$'; then
+            echo "::error::Generated binaries, packet captures, or private lab keys must not be tracked."
+            exit 1
+          fi

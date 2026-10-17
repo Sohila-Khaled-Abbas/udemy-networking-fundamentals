@@ -7,38 +7,48 @@ import (
 )
 
 func main() {
-	udpAddr := net.UDPAddr{IP: net.ParseIP("127.0.0.1"), Port: 5500}
-	ln, err := net.ListenUDP("udp4", &udpAddr)
-
-	defer ln.Close()
-
-	if err != nil {
-		panic(err)
+	serverAddr := &net.UDPAddr{
+		IP:   net.ParseIP("127.0.0.1"),
+		Port: 5500,
 	}
 
-	buf := make([]byte, 1024)
-	count := 0
+	conn, err := net.ListenUDP("udp4", serverAddr)
+	if err != nil {
+		fmt.Printf("Could not start UDP server: %v\n", err)
+		return
+	}
+	defer conn.Close()
+
+	fmt.Println("UDP server listening on 127.0.0.1:5500")
+	fmt.Println("Send 'exit' to stop this learning server.")
+
+	buffer := make([]byte, 1024)
+	requestCount := 0
 
 	for {
-		n, addr, err := ln.ReadFromUDP(buf)
-
+		n, clientAddr, err := conn.ReadFromUDP(buffer)
 		if err != nil {
-			panic(err)
-		}
-
-		if strings.TrimSpace(string(buf[:n-1])) == "exit" {
-			fmt.Println("Exiting UDP server...")
+			fmt.Printf("Could not receive datagram: %v\n", err)
 			return
 		}
 
-		fmt.Println(fmt.Sprintf("Message received: %s, from address %s:%d", buf[:n-2], addr.IP.String(), addr.Port))
+		// Work with the actual bytes received. Never trim by slicing n-1 or n-2:
+		// UDP datagrams can be empty or may not end with a newline.
+		message := strings.TrimSpace(string(buffer[:n]))
 
-		data := []byte(fmt.Sprintf("Request number %d to this server", count))
-		count += 1
-		_, err = ln.WriteToUDP(data, addr)
-
-		if err != nil {
-			panic(err)
+		if message == "exit" {
+			fmt.Println("Exit command received; stopping UDP server.")
+			return
 		}
+
+		fmt.Printf("Received %d byte(s) from %s: %q\n", n, clientAddr, message)
+
+		response := fmt.Sprintf("Request number %d to this server", requestCount)
+		if _, err := conn.WriteToUDP([]byte(response), clientAddr); err != nil {
+			fmt.Printf("Could not send response to %s: %v\n", clientAddr, err)
+			continue
+		}
+
+		requestCount++
 	}
 }

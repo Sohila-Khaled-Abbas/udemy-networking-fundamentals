@@ -25,14 +25,14 @@ A DNS lookup doesn't make a TCP connection by itself. A successful TCP connectio
 
 No third-party npm packages are needed; DNS methods are built into Node.js.
 
-From PowerShell, enter this folder:
+From PowerShell, run this from the repository root:
 
 ```powershell
-Set-Location "D:\courses\Data Science\Data Engineering\Udemy Courses\Fundamentals of Network Engineering\udemy-networking-fundamentals\section-06-protocols"
-node .\dns-lookup.mjs example.com
+Set-Location .\\section-06-protocols
+node .\\dns-lookup.mjs example.com
 ```
 
-If your repository is in a different folder, enter your actual local clone's `section-06-protocols` directory instead.
+These relative commands work regardless of where your local clone is stored. If you are already inside `section-06-protocols`, skip the `Set-Location` command.
 
 The program compares:
 

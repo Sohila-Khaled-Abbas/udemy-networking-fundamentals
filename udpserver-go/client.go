@@ -6,53 +6,64 @@ import (
 	"net"
 	"os"
 	"strings"
+	"time"
 )
 
 func main() {
-	arguments := os.Args
-	if len(arguments) == 1 {
-		fmt.Println("Please provide a host:port string")
-		return
+	if len(os.Args) < 2 {
+		fmt.Fprintln(os.Stderr, "Usage: go run client.go 127.0.0.1:5500")
+		os.Exit(2)
 	}
-	CONNECT := arguments[1]
 
-	s, err := net.ResolveUDPAddr("udp4", CONNECT)
+	serverAddr, err := net.ResolveUDPAddr("udp4", os.Args[1])
 	if err != nil {
-		fmt.Println(err)
-		return
+		fmt.Fprintf(os.Stderr, "Invalid UDP address: %v\n", err)
+		os.Exit(1)
 	}
 
-	c, err := net.DialUDP("udp4", nil, s)
+	conn, err := net.DialUDP("udp4", nil, serverAddr)
 	if err != nil {
-		fmt.Println(err)
-		return
+		fmt.Fprintf(os.Stderr, "Could not start UDP client: %v\n", err)
+		os.Exit(1)
 	}
+	defer conn.Close()
 
-	fmt.Printf("The UDP server is %s\n", c.RemoteAddr().String())
-	defer c.Close()
+	fmt.Printf("UDP target: %s\n", conn.RemoteAddr())
+	reader := bufio.NewReader(os.Stdin)
+	buffer := make([]byte, 1024)
 
 	for {
-		reader := bufio.NewReader(os.Stdin)
 		fmt.Print(">> ")
-		text, _ := reader.ReadString('\n')
-		data := []byte(text + "\n")
-		_, err = c.Write(data)
-		if strings.TrimSpace(string(data)) == "exit" {
-			fmt.Println("Exiting UDP client!")
+		line, readErr := reader.ReadString('\n')
+		if readErr != nil && len(line) == 0 {
 			return
 		}
 
-		if err != nil {
-			fmt.Println(err)
+		message := strings.TrimSpace(line)
+		if _, err := conn.Write([]byte(message)); err != nil {
+			fmt.Fprintf(os.Stderr, "Could not send datagram: %v\n", err)
 			return
 		}
 
-		buffer := make([]byte, 1024)
-		n, _, err := c.ReadFromUDP(buffer)
-		if err != nil {
-			fmt.Println(err)
+		if message == "exit" {
+			fmt.Println("UDP client exiting.")
 			return
 		}
-		fmt.Printf("Reply: %s\n", string(buffer[0:n]))
+
+		if err := conn.SetReadDeadline(time.Now().Add(5 * time.Second)); err != nil {
+			fmt.Fprintf(os.Stderr, "Could not set receive timeout: %v\n", err)
+			return
+		}
+
+		n, err := conn.Read(buffer)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "No UDP response received: %v\n", err)
+			return
+		}
+
+		fmt.Printf("Reply: %s\n", string(buffer[:n]))
+		if readErr != nil {
+			return
+		}
 	}
 }

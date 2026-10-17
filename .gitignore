@@ -1,12 +1,47 @@
+# Dependencies and package-manager noise
 node_modules/
+**/node_modules/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
 
-# Compiled C artifacts
-tcpserver-c/a.out
-tcpserver-c/tcpserver
-tcpserver-c/tcpserver-windows.exe
-udpserver-c/udpserver
-udpserver-c/udpserver-windows.exe
-*.exe
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+*.key
+*-key.pem
+*_key.pem
+id_rsa
+id_ed25519
 
-# Generated Section 6 TLS certificates and private keys (never commit these)
+# Section 6 development CA and leaf certificates (generated locally)
 /section-06-protocols/certs/
+
+# Compiled C / native artifacts
+*.o
+*.obj
+*.a
+*.dll
+*.exe
+a.out
+tcpserver-c/tcpserver
+udpserver-c/udpserver
+
+# Packet captures and debug output
+*.pcap
+*.pcapng
+*.dump
+*.core
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Build / test output
+coverage/
+dist/
+build/

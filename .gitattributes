@@ -1,0 +1,25 @@
+# Normalize text files so diffs stay consistent across Windows, macOS, and Linux.
+* text=auto
+
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.js text eol=lf
+*.mjs text eol=lf
+*.go text eol=lf
+*.c text eol=lf
+*.h text eol=lf
+*.ps1 text eol=lf
+*.sh text eol=lf
+*.cnf text eol=lf
+
+# Binary assets, compiled output, and packet captures are not text.
+*.gif binary
+*.png binary
+*.exe binary
+*.dll binary
+*.a binary
+*.o binary
+*.pcap binary
+*.pcapng binary

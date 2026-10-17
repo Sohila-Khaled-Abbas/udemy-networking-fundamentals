@@ -110,7 +110,44 @@ Test-NetConnection 127.0.0.1 -Port 5500
 
 A successful test reports `TcpTestSucceeded : True`. The server logs when a client connects. Stop the server with `Ctrl+C` when you are done.
 
-### 4. Node.js UDP server
+### 4. Standalone JavaScript TCP server
+
+This additional TCP exercise lives in `tcpserver-javascript/`. It uses Node.js's built-in `net` module and listens on `127.0.0.1:5500`.
+
+In **Terminal 1**, from the repository root:
+
+```powershell
+Set-Location .\\tcpserver-javascript
+npm start
+```
+
+Leave the server running. It should print `TCP server listening on 127.0.0.1:5500`.
+
+In **Terminal 2**, test the TCP port:
+
+```powershell
+Test-NetConnection 127.0.0.1 -Port 5500
+```
+
+Look for `TcpTestSucceeded : True`. To connect and send a message (also from Terminal 2), run:
+
+```powershell
+$client = [System.Net.Sockets.TcpClient]::new()
+$client.Connect('127.0.0.1', 5500)
+$stream = $client.GetStream()
+$reader = [System.IO.StreamReader]::new($stream)
+$writer = [System.IO.StreamWriter]::new($stream)
+$writer.AutoFlush = $true
+$reader.ReadLine()
+$writer.WriteLine('Hello from PowerShell')
+$client.Dispose()
+```
+
+The client should read the server greeting, and Terminal 1 should log the message. Stop the server with `Ctrl+C`.
+
+If the test fails, confirm the server is still running and that both commands use port `5500`. If Node.js reports `EADDRINUSE`, another process is already listening on that port; stop that process or change the port in both the server and test.
+
+### 5. Node.js UDP server
 
 Run either the original Node.js UDP example or the additional JavaScript example. **Do not start both at once** because both bind to `127.0.0.1:5500`.
 
@@ -132,7 +169,7 @@ $udp.Dispose()
 
 The server should print the message and the sender address/port. UDP is connectionless, so this test sends a datagram rather than establishing a TCP connection.
 
-### 5. C UDP server (Linux, macOS, or WSL)
+### 6. C UDP server (Linux, macOS, or WSL)
 
 The C example uses **POSIX socket APIs**, so run it from a POSIX-compatible environment such as Linux, macOS, or Ubuntu under WSL. On Ubuntu/WSL, install GCC and the standard build tools once:
 
@@ -160,7 +197,7 @@ printf 'Hello from the client' | nc -u -w 1 127.0.0.1 5501
 
 This is a deliberately minimal learning example: it receives one datagram and then exits. The code is not intended as a production-ready UDP server.
 
-### 6. C UDP server on Windows (w64devkit + Winsock)
+### 7. C UDP server on Windows (w64devkit + Winsock)
 
 Use this version for a native Windows build. The POSIX `main.c` uses headers that are not available in this form on Windows, so compile `main-windows.c` instead.
 

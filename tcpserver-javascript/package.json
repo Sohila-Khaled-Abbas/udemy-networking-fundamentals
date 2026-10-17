@@ -1,13 +1,12 @@
 {
   "name": "tcpserver-javascript",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A minimal TCP server using Node.js net",
+  "main": "index.mjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.mjs"
   },
-  "keywords": [],
+  "keywords": ["tcp", "networking", "node"],
   "author": "",
-  "license": "ISC",
-  "type": "commonjs"
+  "license": "ISC"
 }

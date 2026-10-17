@@ -7,3 +7,6 @@ tcpserver-c/tcpserver-windows.exe
 udpserver-c/udpserver
 udpserver-c/udpserver-windows.exe
 *.exe
+
+# Generated Section 6 TLS certificates and private keys (never commit these)
+/section-06-protocols/certs/

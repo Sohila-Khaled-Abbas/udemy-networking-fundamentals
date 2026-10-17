@@ -16,6 +16,8 @@
 
 This repository accompanies [Fundamentals of Networking for Effective Backend Design on Udemy](https://www.udemy.com/course/fundamentals-of-networking-for-effective-backend-design/). It combines the course's core ideas with small experiments, Windows-friendly runbooks, packet inspection, and a few implementation comparisons across Go, Node.js, and C.
 
+![Wireshark protocol lab overview](assets/images/wireshark-protocol-overview.svg)
+
 **Learning style:** small experiments, visible output, explicit assumptions, repeatable commands, and notes about what each result does—and does not—prove.
 
 ---
@@ -76,6 +78,17 @@ Follow this sequence so each layer gives context to the next:
 | Server-Sent Events | Local Python SSE server + Wireshark | [Wireshark protocol labs](docs/wireshark-protocol-labs.md#lab-5--wiresharking-server-sent-events-sse) |
 
 The exercises are intentionally small. They are for learning protocol behavior—not production servers, load testing, or security testing against systems you do not own.
+
+## Visual assets
+
+The Wireshark guide includes original vector diagrams for each packet-analysis exercise. These SVG assets are lightweight, scale cleanly on GitHub, and can be edited as text.
+
+- [UDP datagram flow](assets/images/wireshark-udp-flow.svg)
+- [TCP handshake and HTTP exchange](assets/images/wireshark-tcp-http-flow.svg)
+- [HTTP/2 and TLS decryption flow](assets/images/wireshark-http2-tls-decryption.svg)
+- [MongoDB local port-publishing flow](assets/images/wireshark-mongodb-flow.svg)
+- [Server-Sent Events stream](assets/images/wireshark-sse-stream.svg)
+
 
 ## Environment setup
 
@@ -163,6 +176,7 @@ That habit transfers directly to debugging ingestion jobs, API integrations, dat
 ```text
 .
 ├── .github/workflows/validate.yml  # automated syntax/build checks
+├── assets/images/                  # original SVG diagrams for packet-analysis labs
 ├── docs/                           # packet capture, Wireshark protocol labs, SQL Server firewall, routing, Docker, and learning notes
 ├── http-module/                    # built-in Node.js HTTP lab
 ├── section-06-protocols/            # DNS, TLS, certificates, HTTPS

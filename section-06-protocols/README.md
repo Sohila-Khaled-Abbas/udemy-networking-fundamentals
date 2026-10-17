@@ -109,7 +109,7 @@ Generate the local-only test credentials:
 .\generate-dev-certs.ps1
 ```
 
-If PowerShell cannot find OpenSSL, run the script from a terminal where `openssl version` works, such as Git Bash if OpenSSL is available there, or install OpenSSL and reopen the terminal.
+If PowerShell cannot find OpenSSL, install OpenSSL or add the folder containing `openssl.exe` to your Windows `PATH`, then close and reopen PowerShell. If PowerShell blocks the script because of execution policy, run `powershell -NoProfile -ExecutionPolicy Bypass -File .\\generate-dev-certs.ps1`; this uses a process-specific bypass rather than changing your persistent system policy.
 
 Generated files will appear in `certs\`:
 

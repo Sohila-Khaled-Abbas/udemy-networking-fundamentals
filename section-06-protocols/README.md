@@ -28,8 +28,8 @@ No third-party npm packages are needed; DNS methods are built into Node.js.
 From PowerShell, run this from the repository root:
 
 ```powershell
-Set-Location .\\section-06-protocols
-node .\\dns-lookup.mjs example.com
+Set-Location .\section-06-protocols
+node .\dns-lookup.mjs example.com
 ```
 
 These relative commands work regardless of where your local clone is stored. If you are already inside `section-06-protocols`, skip the `Set-Location` command.
@@ -109,7 +109,7 @@ Generate the local-only test credentials:
 .\generate-dev-certs.ps1
 ```
 
-If PowerShell cannot find OpenSSL, install OpenSSL or add the folder containing `openssl.exe` to your Windows `PATH`, then close and reopen PowerShell. If PowerShell blocks the script because of execution policy, run `powershell -NoProfile -ExecutionPolicy Bypass -File .\\generate-dev-certs.ps1`; this uses a process-specific bypass rather than changing your persistent system policy.
+If PowerShell cannot find OpenSSL, install OpenSSL or add the folder containing `openssl.exe` to your Windows `PATH`, then close and reopen PowerShell. If PowerShell blocks the script because of execution policy, run `powershell -NoProfile -ExecutionPolicy Bypass -File .\generate-dev-certs.ps1`; this uses a process-specific bypass rather than changing your persistent system policy.
 
 Generated files will appear in `certs\`:
 

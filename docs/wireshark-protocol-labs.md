@@ -268,7 +268,7 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         try:
             for number in range(1, 11):
-                payload = f"id: {number}\\nevent: tick\\ndata: message {number}\\n\\n"
+                payload = f"id: {number}\nevent: tick\ndata: message {number}\n\n"
                 self.wfile.write(payload.encode("utf-8"))
                 self.wfile.flush()
                 time.sleep(1)

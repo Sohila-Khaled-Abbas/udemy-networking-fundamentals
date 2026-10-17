@@ -23,6 +23,7 @@ This repository accompanies [Fundamentals of Networking for Effective Backend De
 ## Contents
 
 - [Learning path](#learning-path)
+- [SQL Server local-only access control](docs/sql-server-local-access-control.md)
 - [Lab catalog](#lab-catalog)
 - [Environment setup](#environment-setup)
 - [Run your first lab](#run-your-first-lab)
@@ -44,6 +45,7 @@ Follow this sequence so each layer gives context to the next:
 | 5 · HTTPS and identity | How do certificates, keys, and trust fit together? | [Local HTTPS lab](section-06-protocols/README.md#36-https-tls-keys-and-certificates--local-lab) |
 | 6 · Observability | What can a packet capture show that application logs cannot? | [TCP packet-capture lab](docs/tcpdump-capture-lab.md) |
 | 7 · Performance | How can small TCP writes interact with Nagle's algorithm? | [TCP_NODELAY experiment](tcp-nodelay-go/) |
+| 8 · Database access control | How can a local SQL Server listener be kept off the network without breaking local BI/ETL tools? | [SQL Server local-only firewall lab](docs/sql-server-local-access-control.md) |
 
 ## Lab catalog
 
@@ -61,6 +63,7 @@ Follow this sequence so each layer gives context to the next:
 | DNS, TLS, certificates, verified HTTPS | Node.js + OpenSSL | [section-06-protocols](section-06-protocols/README.md) |
 | TCP capture and filters | `tcpdump` in WSL | [capture guide](docs/tcpdump-capture-lab.md) |
 | Small-write behavior | Go TCP client/server | [tcp-nodelay-go](tcp-nodelay-go/) |
+| SQL Server local-only access control | Windows Defender Firewall + PowerShell discovery | [SQL Server firewall lab](docs/sql-server-local-access-control.md) |
 
 The exercises are intentionally small. They are for learning protocol behavior—not production servers, load testing, or security testing against systems you do not own.
 
@@ -148,7 +151,7 @@ That habit transfers directly to debugging ingestion jobs, API integrations, dat
 ```text
 .
 ├── .github/workflows/validate.yml  # automated syntax/build checks
-├── docs/                           # packet capture guide and learning notes
+├── docs/                           # packet capture, SQL Server firewall, and learning notes
 ├── http-module/                    # built-in Node.js HTTP lab
 ├── section-06-protocols/            # DNS, TLS, certificates, HTTPS
 ├── tcp-nodelay-go/                  # TCP_NODELAY / Nagle experiment

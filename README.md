@@ -23,6 +23,7 @@ The original course examples are retained. These are the additional exercises in
 - **Separate JavaScript UDP lab — `udpserver-javascript/index.mjs`:** a Node.js UDP listener using the built-in `dgram` module. It listens on `127.0.0.1:5500` and logs the received datagram and sender address.
 - **Dedicated Node.js project files:** `udpserver-javascript/package.json` and `package-lock.json` organize the JavaScript exercise as its own folder.
 - **Windows-oriented run instructions:** this README includes file-specific Go commands and PowerShell testing steps alongside the original networking references.
+- **TCP packet-capture lab — [`docs/tcpdump-capture-lab.md`](docs/tcpdump-capture-lab.md):** step-by-step `tcpdump` commands in WSL to capture the C TCP server's handshake, data, and teardown, with filters and PCAP export.
 
 > **Note:** Node.js already includes the `dgram` module, so the JavaScript UDP example does not need a third-party package to run. Start it with `node .\index.mjs`.
 
@@ -33,6 +34,7 @@ The original course examples are retained. These are the additional exercises in
 | [`tcpserver-go/`](tcpserver-go/) | Go | TCP server, interactive client, and a concurrent server |
 | [`tcpserver-nodejs/`](tcpserver-nodejs/) | Node.js | TCP server using the built-in `net` module |
 | [`tcpserver-c/`](tcpserver-c/) | C | TCP server: POSIX source plus native Windows Winsock version |
+| [`docs/tcpdump-capture-lab.md`](docs/tcpdump-capture-lab.md) | Lab guide | Capture and interpret TCP segments with tcpdump in WSL |
 | [`udpserver-go/`](udpserver-go/) | Go | UDP server and client |
 | [`udpserver-nodejs/`](udpserver-nodejs/) | Node.js | UDP listener using `dgram` |
 | [`udpserver-javascript/`](udpserver-javascript/) | JavaScript | Additional standalone UDP listener |
